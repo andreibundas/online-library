@@ -1,6 +1,7 @@
 package org.fasttrackit.onlinelibrary.service;
 
 import org.fasttrackit.onlinelibrary.domain.User;
+import org.fasttrackit.onlinelibrary.exception.ResourceNotFoundException;
 import org.fasttrackit.onlinelibrary.persistence.UserRepository;
 import org.fasttrackit.onlinelibrary.transfer.SaveUserRequest;
 import org.slf4j.Logger;
@@ -27,5 +28,14 @@ public class UserService {
         user.setLastName(request.getLastName());
 
         return userRepository.save(user);
+    }
+
+    public User getUser(long id) {
+        LOGGER.info("Retrieving user {} ", id);
+
+        return userRepository.findById(id).orElseThrow(()
+                -> new ResourceNotFoundException("User " + id + " does not exist"));
+
+
     }
 }
