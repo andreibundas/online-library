@@ -3,11 +3,14 @@ package org.fasttrackit.onlinelibrary.service;
 import org.fasttrackit.onlinelibrary.domain.User;
 import org.fasttrackit.onlinelibrary.exception.ResourceNotFoundException;
 import org.fasttrackit.onlinelibrary.persistence.UserRepository;
+import org.fasttrackit.onlinelibrary.transfer.GetUsersRequest;
 import org.fasttrackit.onlinelibrary.transfer.SaveUserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,8 +39,22 @@ public class UserService {
 
         return userRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("User " + id + " does not exist"));
-
     }
+
+    public Page<User> getUsers(GetUsersRequest request, Pageable pageable) {
+        LOGGER.info("Retrieving users: {} ", request);
+
+        if(request.getPartialFirstName() != null && request.getPartialLastName() != null  ) {
+            return userRepository.findByFirstNameContainsAndLastNameContains(request.getPartialFirstName(), request.getPartialLastName(), pageable);
+        }else if(request.getPartialFirstName() != null ) {
+            return userRepository.findByFirstNameContains(request.getPartialFirstName(), pageable);
+        }else if (request.getPartialLastName() != null ) {
+            return userRepository.findByLastNameContains(request.getPartialLastName(), pageable);
+        }else
+
+        return userRepository.findAll(pageable);
+    }
+
     public User updateUser(long id, SaveUserRequest request) {
         LOGGER.info("Updating user : {}: {} ", id, request);
 
