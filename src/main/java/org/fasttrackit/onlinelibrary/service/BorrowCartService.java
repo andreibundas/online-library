@@ -2,8 +2,10 @@ package org.fasttrackit.onlinelibrary.service;
 
 import org.fasttrackit.onlinelibrary.domain.BorrowCart;
 import org.fasttrackit.onlinelibrary.domain.User;
+import org.fasttrackit.onlinelibrary.exception.ResourceNotFoundException;
 import org.fasttrackit.onlinelibrary.persistence.BorrowCartRepository;
 import org.fasttrackit.onlinelibrary.transfer.AddBookToBorrowCartRequest;
+import org.fasttrackit.onlinelibrary.transfer.borrowCart.BorrowCartResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ public class BorrowCartService {
         this.userService = userService;
     }
 
+    // if user does not have a borrow cart, create one and assign it to the user
     @Transactional
     public BorrowCart addBooksToBorrowCart(AddBookToBorrowCartRequest request) {
         LOGGER.info("Adding book to borrow-cart: {}", request);
@@ -40,4 +43,17 @@ public class BorrowCartService {
 
         return borrowCartRepository.save(borrowCart);
     }
+
+    @Transactional
+    public BorrowCartResponse getBorrowCart(long userId) {
+        LOGGER.info( "Retrieving borrowCart for user: {}", userId);
+
+        BorrowCart borrowCart = borrowCartRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(" Borrow Cart " + userId + "does not exist "));
+
+        BorrowCartResponse borrowCartResponse = new BorrowCartResponse();
+        borrowCartResponse.setId(borrowCart.getId());
+
+        return borrowCartResponse;
+    }
+
 }
