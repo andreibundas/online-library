@@ -1,4 +1,4 @@
-package org.fasttrackit.onlinelibrary.transfer;
+package org.fasttrackit.onlinelibrary.transfer.user;
 
 public class GetUsersRequest {
 

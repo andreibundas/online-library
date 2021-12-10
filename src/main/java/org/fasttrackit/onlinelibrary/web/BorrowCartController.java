@@ -2,9 +2,10 @@ package org.fasttrackit.onlinelibrary.web;
 
 import org.fasttrackit.onlinelibrary.domain.BorrowCart;
 import org.fasttrackit.onlinelibrary.service.BorrowCartService;
-import org.fasttrackit.onlinelibrary.transfer.AddBookToBorrowCartRequest;
+import org.fasttrackit.onlinelibrary.transfer.borrowCart.AddBookToBorrowCartRequest;
 import org.fasttrackit.onlinelibrary.transfer.borrowCart.BorrowCartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +23,14 @@ public class BorrowCartController {
     }
 
     @PutMapping
-    public ResponseEntity<BorrowCart> addBooksToBorrowCart(@RequestBody @Valid AddBookToBorrowCartRequest request) {
-        BorrowCart borrowCart = borrowCartService.addBooksToBorrowCart(request);
-        return ResponseEntity.ok(borrowCart);
+    public ResponseEntity<Void> addBookToBorrowCart(@RequestBody @Valid AddBookToBorrowCartRequest request) {
+        borrowCartService.addBookToBorrowCart(request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("/{userId}")
     public ResponseEntity<BorrowCartResponse> getBorrowCart(@PathVariable long userId) {
         BorrowCartResponse borrowCartResponse = borrowCartService.getBorrowCart(userId);
         return ResponseEntity.ok(borrowCartResponse);
     }
-
-
 }
+

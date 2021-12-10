@@ -3,7 +3,8 @@ package org.fasttrackit.onlinelibrary.user;
 import org.fasttrackit.onlinelibrary.domain.User;
 import org.fasttrackit.onlinelibrary.exception.ResourceNotFoundException;
 import org.fasttrackit.onlinelibrary.service.UserService;
-import org.fasttrackit.onlinelibrary.transfer.SaveUserRequest;
+import org.fasttrackit.onlinelibrary.steps.UserTestSteps;
+import org.fasttrackit.onlinelibrary.transfer.user.SaveUserRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,14 @@ public class UserServiceIntegrationTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserTestSteps userTestSteps;
+
     @Test
     public void createUser_whenValidRequest_thenReturnSavedUser() {
 
-        createUser();
-
+        userTestSteps.createUser();
     }
-
 
     @Test
     public void createUser_whenMissingFirstName_thenThrowException() {
@@ -50,7 +52,7 @@ public class UserServiceIntegrationTests {
     @Test
     public void getUser_whenExistingUser_thenReturnUser() {
 
-        User createdUser = createUser();
+        User createdUser = userTestSteps.createUser();
 
         User userResponse = userService.getUser(createdUser.getId());
 
@@ -68,7 +70,7 @@ public class UserServiceIntegrationTests {
     @Test
     public void updateUser_whenExistingUser_thenReturnUpdatedUser() {
 
-        User createdUser = createUser();
+        User createdUser = userTestSteps.createUser();
 
         SaveUserRequest request = new SaveUserRequest();
         request.setFirstName(createdUser.getFirstName() + " Updated");
@@ -85,7 +87,7 @@ public class UserServiceIntegrationTests {
     @Test
     public void updateUser_whenNonExistingUser_thenThrowResourceNotFoundException() {
 
-        User createdUser = createUser();
+        User createdUser = userTestSteps.createUser();
 
         SaveUserRequest request = new SaveUserRequest();
         request.setFirstName(createdUser.getFirstName() + " Updated");
@@ -97,27 +99,12 @@ public class UserServiceIntegrationTests {
     @Test
     public void deleteUser_whenExistingUser_thenTheUserIsDeleted() {
 
-        User createdUser = createUser();
+        User createdUser = userTestSteps.createUser();
 
         userService.deleteUser(createdUser.getId());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () ->  userService.getUser(createdUser.getId()));
 
-
     }
 
-    private User createUser() {
-        SaveUserRequest request = new SaveUserRequest();
-        request.setFirstName("Test First Name");
-        request.setLastName("Test Last Name");
-
-        User user = userService.createUser(request);
-
-        assertThat(user, notNullValue());
-        assertThat(user.getId(), greaterThan(0L));
-        assertThat(user.getFirstName(), is(request.getFirstName()));
-        assertThat(user.getLastName(), is(request.getLastName()));
-
-        return user;
-    }
 }

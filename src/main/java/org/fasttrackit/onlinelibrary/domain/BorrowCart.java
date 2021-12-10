@@ -12,7 +12,7 @@ public class BorrowCart {
     @MapsId
     private User user;
 
-    private long borrowNrWeeks;
+//    private long borrowNrWeeks;
 
     public long getId() {
         return id;
@@ -31,19 +31,11 @@ public class BorrowCart {
     }
 
 
-    public long getBorrowNrWeeks() {
-        return borrowNrWeeks;
-    }
-
-    public void setBorrowNrWeeks(long borrowNrWeeks) {
-        this.borrowNrWeeks = borrowNrWeeks;
-    }
-
     @Override
     public String toString() {
         return "BorrowCart{" +
                 "id=" + id +
-                ", borrowNrWeeks=" + borrowNrWeeks +
+                ", user=" + user +
                 '}';
     }
 }
