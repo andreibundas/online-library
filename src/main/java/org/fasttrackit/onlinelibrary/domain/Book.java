@@ -3,7 +3,11 @@ package org.fasttrackit.onlinelibrary.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Book {
@@ -23,6 +27,8 @@ public class Book {
     @NotNull
     private Integer quantity;
 
+    @ManyToMany(mappedBy = "books")
+    private Set<BorrowCart> borrowCarts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -86,6 +92,27 @@ public class Book {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Set<BorrowCart> getBorrowCarts() {
+        return borrowCarts;
+    }
+
+    public void setBorrowCarts(Set<BorrowCart> borrowCarts) {
+        this.borrowCarts = borrowCarts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return id.equals(book.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override

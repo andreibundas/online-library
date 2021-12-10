@@ -1,12 +1,12 @@
 package org.fasttrackit.onlinelibrary.transfer.borrowCart;
 
+import java.util.Set;
+
 public class BorrowCartResponse {
 
     private long id;
 
-    // book details to be added later
-
-
+    private Set<BookInBorrowCart> books;
 
     public long getId() {
         return id;
@@ -16,10 +16,20 @@ public class BorrowCartResponse {
         this.id = id;
     }
 
+
+    public Set<BookInBorrowCart> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<BookInBorrowCart> books) {
+        this.books = books;
+    }
+
     @Override
     public String toString() {
         return "BorrowCartResponse{" +
                 "id=" + id +
+                ", books=" + books +
                 '}';
     }
 }

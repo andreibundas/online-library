@@ -1,10 +1,12 @@
 package org.fasttrackit.onlinelibrary.service;
 
+import org.fasttrackit.onlinelibrary.domain.Book;
 import org.fasttrackit.onlinelibrary.domain.BorrowCart;
 import org.fasttrackit.onlinelibrary.domain.User;
 import org.fasttrackit.onlinelibrary.exception.ResourceNotFoundException;
 import org.fasttrackit.onlinelibrary.persistence.BorrowCartRepository;
 import org.fasttrackit.onlinelibrary.transfer.borrowCart.AddBookToBorrowCartRequest;
+import org.fasttrackit.onlinelibrary.transfer.borrowCart.BookInBorrowCart;
 import org.fasttrackit.onlinelibrary.transfer.borrowCart.BorrowCartResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class BorrowCartService {
@@ -20,11 +24,13 @@ public class BorrowCartService {
 
     private final BorrowCartRepository borrowCartRepository;
     private final UserService userService;
+    private final BookService bookService;
 
     @Autowired
-    public BorrowCartService(BorrowCartRepository borrowCartRepository, UserService userService) {
+    public BorrowCartService(BorrowCartRepository borrowCartRepository, UserService userService, BookService bookService) {
         this.borrowCartRepository = borrowCartRepository;
         this.userService = userService;
+        this.bookService = bookService;
     }
 
     // if user does not have a borrow cart, create one and assign it to the user
@@ -39,7 +45,8 @@ public class BorrowCartService {
             borrowCart.setUser(user);
         }
 
-        //add books to borrowCart
+        Book book = bookService.getBook(request.getBookId());
+        borrowCart.addBook(book);
 
         borrowCartRepository.save(borrowCart);
     }
@@ -53,7 +60,20 @@ public class BorrowCartService {
         BorrowCartResponse borrowCartResponse = new BorrowCartResponse();
         borrowCartResponse.setId(borrowCart.getId());
 
+        Set<BookInBorrowCart> books = new HashSet<>();
+
+        for (Book book : borrowCart.getBooks()) {
+            BookInBorrowCart bookInBorrowCart = new BookInBorrowCart();
+            bookInBorrowCart.setId(book.getId());
+            bookInBorrowCart.setTitle(book.getTitle());
+            bookInBorrowCart.setImageUrl(book.getImageUrl());
+            bookInBorrowCart.setPriceWeek(book.getPriceWeek());
+
+            books.add(bookInBorrowCart);
+        }
+
+        borrowCartResponse.setBooks(books);
+
         return borrowCartResponse;
     }
-
 }
