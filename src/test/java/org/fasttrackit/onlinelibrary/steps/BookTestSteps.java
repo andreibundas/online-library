@@ -2,7 +2,7 @@ package org.fasttrackit.onlinelibrary.steps;
 
 import org.fasttrackit.onlinelibrary.service.BookService;
 import org.fasttrackit.onlinelibrary.transfer.book.BookResponse;
-import org.fasttrackit.onlinelibrary.transfer.book.SaveBookRequst;
+import org.fasttrackit.onlinelibrary.transfer.book.SaveBookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class BookTestSteps {
 
     public BookResponse createBook() {
 
-        SaveBookRequst request = new SaveBookRequst();
+        SaveBookRequest request = new SaveBookRequest();
 
         request.setTitle("Title" + System.currentTimeMillis());
         request.setAuthor("Author" + System.currentTimeMillis());

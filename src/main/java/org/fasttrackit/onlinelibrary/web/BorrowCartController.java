@@ -1,6 +1,5 @@
 package org.fasttrackit.onlinelibrary.web;
 
-import org.fasttrackit.onlinelibrary.domain.BorrowCart;
 import org.fasttrackit.onlinelibrary.service.BorrowCartService;
 import org.fasttrackit.onlinelibrary.transfer.borrowCart.AddBookToBorrowCartRequest;
 import org.fasttrackit.onlinelibrary.transfer.borrowCart.BorrowCartResponse;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/carts")
 public class BorrowCartController {

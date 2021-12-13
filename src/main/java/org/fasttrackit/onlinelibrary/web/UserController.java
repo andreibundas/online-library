@@ -29,7 +29,6 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody @Valid SaveUserRequest request) {
         User user = userService.createUser(request);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
-
     }
 
     @GetMapping("/{id}")

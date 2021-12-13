@@ -2,7 +2,7 @@ package org.fasttrackit.onlinelibrary.transfer.book;
 
 import javax.validation.constraints.NotNull;
 
-public class SaveBookRequst {
+public class SaveBookRequest {
 
     @NotNull
     private String title;
